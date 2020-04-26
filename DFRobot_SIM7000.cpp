@@ -579,7 +579,11 @@ char* DFRobot_SIM7000::GetLatitude(char* trame)
 {
 	int index=3;	
 	char delim[] = ",";
-	char *ptr = strtok(str, delim);
+	char * localtrame;
+	localtrame = (char *) malloc(strlen( trame));
+    strcpy( localtrame, trame );
+   
+	char *ptr = strtok(localtrame, delim);
 	while (ptr != NULL && index>0)
 	{
 		//printf("'%s'\n", ptr);
@@ -593,8 +597,12 @@ char* DFRobot_SIM7000::GetLongitude(char* trame)
 {
 	int index=4;	
 	char delim[] = ",";
-
-	char *ptr = strtok(str, delim);
+    
+	char * localtrame;
+	localtrame = (char *) malloc(strlen( trame));
+    strcpy( localtrame, trame );
+	
+	char *ptr = strtok(localtrame, delim);
 
 	while (ptr != NULL && index>0)
 	{
