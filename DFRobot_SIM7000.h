@@ -54,7 +54,8 @@ public:
     char*    getLongitude(void);
 	char*    GetLatitude(char* trame);
 	char*    GetLongitude(char* trame);
-	void DFRobot_SIM7000::GetGpsCoordinates(char* trame, char* latitude, char* longitude);
+	void     GetGpsCoordinates(char* trame, char* latitude, char* longitude);
+	void     GetRemoteConfiguration();
 
 private:
 

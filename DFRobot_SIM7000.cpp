@@ -538,6 +538,22 @@ delay(1000);
 	return true;
 }
 
+
+void DFRobot_SIM7000::GetRemoteConfiguration()
+{
+	char * host;
+	host+	= "http://l.copdrive.com/api/Tk/GetConfiguration/";
+	host+   = DeviceId;
+	httpGet(host);
+
+	send_cmd("AT+HTTPREAD\r\n");
+	String data;
+	get_String(data);
+	Serial.println(data);
+}
+
+
+
 void  DFRobot_SIM7000::httpGet(const char *Host)
 {
     if(!httpConnect(Host)){
