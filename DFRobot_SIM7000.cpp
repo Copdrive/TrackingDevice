@@ -613,7 +613,26 @@ char* DFRobot_SIM7000::GetLongitude(char* trame)
 	return ptr;
 }
 
+void DFRobot_SIM7000::GetGpsCoordinates(char* trame, char* latitude, char* longitude)
+{
+	int index=0;	
+	char delim[] = ",";	
+	
+	char *ptr = strtok(trame, delim);
 
+	while (ptr != NULL)
+	{
+		//printf("'%s'\n", ptr);
+		ptr = strtok(NULL, delim);
+		if(index==3){
+			latitude=ptr;
+		}
+		if(index==4){
+			longitude=ptr;
+		}
+		index++;
+	}
+}
 
 
 bool  DFRobot_SIM7000::getPosition(void)
@@ -635,8 +654,9 @@ bool  DFRobot_SIM7000::getPosition(void)
     }
     if(getCommandCounter() == 4){
         //position  = strstr(posBuffer,".000");
-		latitude = GetLatitude(posBuffer);
-		longitude = GetLongitude(posBuffer);
+		//latitude = GetLatitude(posBuffer);
+		//longitude = GetLongitude(posBuffer);
+		GetGpsCoordinates(posBuffer, latitude, longitude);
         //memcpy(latitude , position+5 , 7);
         //memcpy(longitude, position+15, 9);
         setCommandCounter(5);
