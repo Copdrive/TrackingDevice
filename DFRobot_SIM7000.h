@@ -52,6 +52,8 @@ public:
     bool     getPosition(void);
     char*    getLatitude(void);
     char*    getLongitude(void);
+	char*    GetLatitude(char* trame);
+	char*    GetLongitude(char* trame);
 
 private:
 

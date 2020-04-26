@@ -575,6 +575,39 @@ int   DFRobot_SIM7000::recv(char* buf, int maxlen, int timeout)
     return i;
 }
 
+char* DFRobot_SIM7000::GetLatitude(char* trame)
+{
+	int index=3;	
+	char delim[] = ",";
+	char *ptr = strtok(str, delim);
+	while (ptr != NULL && index>0)
+	{
+		//printf("'%s'\n", ptr);
+		ptr = strtok(NULL, delim);
+		index--;
+	}
+	return ptr;
+}
+
+char* DFRobot_SIM7000::GetLongitude(char* trame)
+{
+	int index=4;	
+	char delim[] = ",";
+
+	char *ptr = strtok(str, delim);
+
+	while (ptr != NULL && index>0)
+	{
+		//printf("'%s'\n", ptr);
+		ptr = strtok(NULL, delim);
+		index--;
+	}
+	return ptr;
+}
+
+
+
+
 bool  DFRobot_SIM7000::getPosition(void)
 {
     char  posBuffer[150];
@@ -593,9 +626,11 @@ bool  DFRobot_SIM7000::getPosition(void)
 		return false;
     }
     if(getCommandCounter() == 4){
-        position  = strstr(posBuffer,".000");
-        memcpy(latitude , position+5 , 7);
-        memcpy(longitude, position+15, 9);
+        //position  = strstr(posBuffer,".000");
+		latitude = GetLatitude(posBuffer);
+		longitude = GetLongitude(posBuffer);
+        //memcpy(latitude , position+5 , 7);
+        //memcpy(longitude, position+15, 9);
         setCommandCounter(5);
 		Serial.println("4");
         return true;
