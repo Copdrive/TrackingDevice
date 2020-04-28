@@ -137,18 +137,14 @@ void setup(){
             delay(500);
         }
     }
-Serial.println("Positioning initialized");
+	Serial.println("Positioning initialized");
 
  
- while(1) {
+	while(1) {
      bool trameLoaded=false;
-      while(!trameLoaded){
-        if(sim7000.getPosition()){                                     //Get the current position
-     
-  
-        trameLoaded=true;
-        }else{
-     
+     while(!trameLoaded){
+        if(sim7000.getPosition()){  
+			trameLoaded=true;
         }
     }
   
@@ -189,7 +185,7 @@ Serial.println("Positioning initialized");
 			else{
 			   // Serial.println("Fail to post");
 			}
-        } 
+        }
    }
 
    Serial.println("Disconnect");

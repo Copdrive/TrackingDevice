@@ -56,6 +56,9 @@ public:
 	char*    GetLongitude(char* trame);
 	void     GetGpsCoordinates(char* trame, char* latitude, char* longitude);
 	void     GetRemoteConfiguration();
+	void     Split(char* trame,int idx, char* value);
+	void     Split(char* trame, char* clientNameValue, char* frequencyValue);
+	void     GetConfiguration(char* trame, char* clientName, char* frequencyInSecondes);
 
 private:
 

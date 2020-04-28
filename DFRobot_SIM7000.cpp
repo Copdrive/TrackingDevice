@@ -629,6 +629,73 @@ char* DFRobot_SIM7000::GetLongitude(char* trame)
 	return ptr;
 }
 
+void DfRobot_SIM7000::Split(char* trame, char* clientNameValue, char* frequencyValue){
+	
+	char delim[] = ",";		
+	char *ptr = strtok(trame, delim);
+	int index=0;
+	while (ptr != NULL)
+	{
+		//printf("'%s'\n", ptr);
+		ptr = strtok(NULL, separator);
+		if(index==0){
+			frequencyValue=ptr;
+		}
+		if(index==1){
+			clientNameValue=ptr;
+		}		
+		index++;
+	}	
+}
+
+void DfRobot_SIM7000::Split(char* trame,int idx, char* value){
+	
+	char delim[] = ":";		
+	char *ptr = strtok(trame, delim);
+	int index=0;
+	while (ptr != NULL)
+	{
+		//printf("'%s'\n", ptr);
+		ptr = strtok(NULL, separator);
+		if(index==idx){
+			value=ptr;
+			return;
+		}			
+		index++;
+	}	
+}
+
+void DfRobot_SIM7000::Split(char* trame, char* clientNameValue, char* frequencyValue){
+	
+	char delim[] = ",";		
+	char *ptr = strtok(trame, delim);
+	int index=0;
+	while (ptr != NULL)
+	{
+		//printf("'%s'\n", ptr);
+		ptr = strtok(NULL, separator);
+		if(index==0){
+			frequencyValue=ptr;
+		}
+		if(index==1){
+			clientNameValue=ptr;
+		}		
+		index++;
+	}	
+}
+
+
+"{qsdqs:sdfsdf, client:sdfsdf}"
+void DFRobot_SIM7000::GetConfiguration(char* trame, char* clientName, char* frequencyInSecondes)
+{
+	char* clientNameValue;
+	char* frequencyValue;
+	Split(trame, clientNameValue, frequencyValue);
+	Split(clientNameValue,1,clientName);
+	Split(frequencyValue,1,frequencyInSecondes);	
+}
+
+
 void DFRobot_SIM7000::GetGpsCoordinates(char* trame, char* latitude, char* longitude)
 {
 	int index=0;	
@@ -658,9 +725,9 @@ bool  DFRobot_SIM7000::getPosition(void)
     cleanBuffer(posBuffer,150);
     send_cmd("AT+CGNSINF\r\n");
     readBuffer(posBuffer,150);
-	Serial.println("test_trame GPS--->>>>");
-	Serial.println(posBuffer);
-	Serial.println("1");
+	//Serial.println("test_trame GPS--->>>>");
+	//Serial.println(posBuffer);
+	//Serial.println("1");
     if(NULL != strstr(posBuffer,"+CGNSINF: 1,1")){
         setCommandCounter(4);
 	//	Serial.println("2");
@@ -669,17 +736,12 @@ bool  DFRobot_SIM7000::getPosition(void)
 		return false;
     }
     if(getCommandCounter() == 4){
-        //position  = strstr(posBuffer,".000");
-		//latitude = GetLatitude(posBuffer);
-		//longitude = GetLongitude(posBuffer);
 		GetGpsCoordinates(posBuffer, latitude, longitude);
-        //memcpy(latitude , position+5 , 7);
-        //memcpy(longitude, position+15, 9);
         setCommandCounter(5);
-		Serial.println("4");
+		//Serial.println("4");
         return true;
     }else{
-		Serial.println("5");
+		//Serial.println("5");
         return false;
     }
 }
