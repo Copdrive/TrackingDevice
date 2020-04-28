@@ -47,14 +47,15 @@ void setup(){
     Serial.println("Set baud rate......");
     while(1){
         if(sim7000.setBaudRate(19200)){                      //Set SIM7000 baud rate from 115200 to 19200 reduce the baud rate to avoid distortion
-            Serial.println("Set baud rate:19200");
+            //Serial.println("Set baud rate:19200");
             break;
         }else{
-            Serial.println("Faile to set baud rate");
+            //Serial.println("Faile to set baud rate");
             delay(1000);
         }
     }
-
+	Serial.println("Set baud rate:19200");
+	
     Serial.println("Check SIM card......");
     if(sim7000.checkSIMStatus()){                            //Check SIM card
         Serial.println("SIM card READY");
@@ -63,34 +64,36 @@ void setup(){
         while(1);
     }
     
-    Serial.println("Set net mode......");
+    //Serial.println("Set net mode......");
     while(1){
         if(sim7000.setNetMode(GPRS)){                        //Set net mod GPRS
-            Serial.println("Set GPRS mode");
+            //Serial.println("Set GPRS mode");
             break;
         }else{
-            Serial.println("Fail to set mode");
+            //Serial.println("Fail to set mode");
             delay(1000);
         }
     }
-
-    Serial.println("Get signal quality......");
-    signalStrength=sim7000.checkSignalQuality();             //Check signal quality from (0-30)
+	Serial.println("GPRS mode already set");
+    //Serial.println("Get signal quality......");
+    
+	signalStrength=sim7000.checkSignalQuality();             //Check signal quality from (0-30)
     Serial.print("signalStrength =");
     Serial.println(signalStrength);
-    delay(500);
+    
+	delay(500);
 
     Serial.println("Attaching service......");
     while(1){
         if(sim7000.attacthService()){                        //Open the connection
-            Serial.println("Attach service");
+            //Serial.println("Attach service");
             break;
         }else{
-            Serial.println("Fail to Attach service");
+            //Serial.println("Fail to Attach service");
             delay(1000);
         }
     }
-
+	Serial.println("service attached");
  /* while(1){
         if(sim7000.init()){                                        //Init SIM7000
             Serial.println("AT command READY");
@@ -103,12 +106,14 @@ void setup(){
    Serial.println("Init http......");
     while(1){
      if(sim7000.httpInit(GPRS)){                          //Init http service
-            Serial.println("HTTP init !");
+            //Serial.println("HTTP init !");
             break;
         }else{
-            Serial.println("Fail to init http");
+            //Serial.println("Fail to init http");
         }
    }
+   Serial.println("HTTP initialized !");
+   
 /* while(1){
     if(sim7000.httpGet(GETURL))
       {              //HTTP POST
@@ -125,19 +130,17 @@ void setup(){
 
     while(1){
         if(sim7000.initPos()){
-            Serial.println("Positioning function initialized");
+            //Serial.println("Positioning function initialized");
             break;
         }else{
-            Serial.println("Fail to init positioning function");
+            //Serial.println("Fail to init positioning function");
             delay(500);
         }
     }
-
+Serial.println("Positioning initialized");
 
  
- while(1) { 
-      
- 
+ while(1) {
      bool trameLoaded=false;
       while(!trameLoaded){
         if(sim7000.getPosition()){                                     //Get the current position
@@ -149,61 +152,52 @@ void setup(){
         }
     }
   
-    //  Serial.print("POST to ");
-     // Serial.println(POSTURL);
-    
-
-  //  char * data="{\"lat\":45.344,\"lng\":4.565,\"deviceId\":\"ddfdd\",\"temp\":18.5,\"client\":\"CovTn\"}";
-  
- int length_post;
-length_post = strlen("{\"lat\":");
-length_post += strlen(sim7000.getLatitude());
-length_post += strlen( ",\"lng\":");
-length_post += strlen(sim7000.getLongitude());
-length_post += strlen(",\"deviceId\":");
-length_post += strlen("\"ddfdd\"");
-length_post += strlen(",\"temp\":");
-length_post += strlen(temp);
-length_post += strlen(",\"client\":");
-length_post += strlen("\"evtripmap\"}");
- Serial.println(length_post);
+	int length_post;
+	length_post = strlen("{\"lat\":");
+	length_post += strlen(sim7000.getLatitude());
+	length_post += strlen( ",\"lng\":");
+	length_post += strlen(sim7000.getLongitude());
+	length_post += strlen(",\"deviceId\":");
+	length_post += strlen("\"ddfdd\"");
+	length_post += strlen(",\"temp\":");
+	length_post += strlen(temp);
+	length_post += strlen(",\"client\":");
+	length_post += strlen("\"evtripmap\"}");
+	//Serial.println(length_post);
    
-    char httpbuff_post[length_post];
-    
+    char httpbuff_post[length_post];    
   
-strcpy(httpbuff_post,"{\"lat\":");
-strcat(httpbuff_post,sim7000.getLatitude());
-strcat(httpbuff_post, ",\"lng\":");
-strcat(httpbuff_post, sim7000.getLongitude());
-strcat(httpbuff_post, ",\"deviceId\":");
-strcat(httpbuff_post, "\"ddfdd\"");
-strcat(httpbuff_post, ",\"temp\":");
-strcat(httpbuff_post, temp);
-strcat(httpbuff_post, ",\"client\":");
-strcat(httpbuff_post, "\"evtripmap\"}");
+	strcpy(httpbuff_post,"{\"lat\":");
+	strcat(httpbuff_post,sim7000.getLatitude());
+	strcat(httpbuff_post, ",\"lng\":");
+	strcat(httpbuff_post, sim7000.getLongitude());
+	strcat(httpbuff_post, ",\"deviceId\":");
+	strcat(httpbuff_post, "\"ddfdd\"");
+	strcat(httpbuff_post, ",\"temp\":");
+	strcat(httpbuff_post, temp);
+	strcat(httpbuff_post, ",\"client\":");
+	strcat(httpbuff_post, "\"evtripmap\"}");
 
-  Serial.println(httpbuff_post); 
+    //Serial.println(httpbuff_post); 
    
-  // sim7000.httpPost(POSTURL,httpbuff_post);
-   while(1){
-    if(sim7000.httpPost(POSTURL,httpbuff_post)){              //HTTP POST
-           // Serial.println("Post successed");
-            break;
-        }else{
-           // Serial.println("Fail to post");
-        }
-        }
- 
-  }
+    // sim7000.httpPost(POSTURL,httpbuff_post);
+    while(1){
+			if(sim7000.httpPost(POSTURL,httpbuff_post)){              //HTTP POST
+			   // Serial.println("Post successed");
+				break;
+			}
+			else{
+			   // Serial.println("Fail to post");
+			}
+        } 
+   }
 
-    Serial.println("Disconnect");
-    sim7000.httpDisconnect();                                //Disconnect
-    Serial.println("Close net work");
-    sim7000.closeNetwork();                                  //Close net work
+   Serial.println("Disconnect");
+   sim7000.httpDisconnect();                                //Disconnect
+   Serial.println("Close net work");
+   sim7000.closeNetwork();                                  //Close net work
    Serial.println("Turn off SIM7000");
    sim7000.turnOFF();                                       //Turn OFF SIM7000
-  
-  
 }
 
 void loop() {
