@@ -578,9 +578,9 @@ char* frequencyValue, DeviceId ;
 
    send_cmd("AT+HTTPREAD=0,55\r\n");
 //Serial.println("SIMbuffer-----1>"); // 
-  readBuffer(SIMbuffer,20,DEFAULT_TIMEOUT,DEFAULT_INTERCHAR_TIMEOUT);
- delay(1000);
- //   String data;
+  readBuffer(SIMbuffer,20,DEFAULT_TIMEOUT,DEFAULT_INTERCHAR_TIMEOUT); // J'ai rajouté cette ligne de code pour pouvoir visualiser SIMbuffer
+ delay(1000);								// Le problème que ça ne donne rien --> ce tableau est vide 
+ //   String data;							// 
  //   get_String(data);
 
   
@@ -590,7 +590,7 @@ char* frequencyValue, DeviceId ;
      //String data;
     //get_String(data);
   // Serial.println("data->>>>>>>");
- // GetConfiguration(SIMbuffer, DeviceId, frequencyValue);
+ // GetConfiguration(SIMbuffer, DeviceId, frequencyValue);  // Cette fonction est entrain de lire un SIMbuffer vide !!!!
 //Serial.println("SIMbuffer----->");
 // Serial.println(SIMbuffer);
 // Serial.println("\r\n");
@@ -659,8 +659,8 @@ void DFRobot_SIM7000::GetConfiguration(char* trame, char* clientName, char* freq
 	char* clientNameValue;
 	char* frequencyValue;
 	Split(trame, clientNameValue, frequencyValue);
-	GetPropertyValue(clientNameValue,1,clientName);
-	GetPropertyValue(frequencyValue,1,frequencyInSecondes);	
+	GetPropertyValue(clientNameValue,1,clientName);// Est ce que tu veux bien vérifier deux chose GetpropertyValue avant split ou l'inverse
+	GetPropertyValue(frequencyValue,1,frequencyInSecondes);	// pour la variable int elle égale à 1 pour les deux fonction ?
 }
 
 void DFRobot_SIM7000::GetGpsCoordinates(char* trame, char* latitude, char* longitude)
