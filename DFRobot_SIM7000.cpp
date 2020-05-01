@@ -538,25 +538,34 @@ delay(1000);
 	return true;
 }
 
-
-void DFRobot_SIM7000::GetRemoteConfiguration()
+void DFRobot_SIM7000::GetRemoteConfiguration(char * DeviceId)
 {
 	char * host;
-	host+	= "http://l.copdrive.com/api/Tk/GetConfiguration/";
-	host+   = DeviceId;
+	char  SIMbuffer[60];
+	host = "http://l.copdrive.com/api/Tracking/GetConfiguration/";
+	//Serial.println(DeviceId);
+	//Serial.println(host);
+	strcat(host,DeviceId);
+	
+	
+	Serial.println("test host");
+	Serial.println(host);
 	httpGet(host);
+	
+	//send_cmd("AT+HTTPREAD=0,60\r\n");
+	//readBuffer(SIMbuffer,100,5,1500);
 
-	send_cmd("AT+HTTPREAD\r\n");
-	String data;
-	get_String(data);
-	Serial.println(data);
+	
+
 }
 
-
-
-void  DFRobot_SIM7000::httpGet(const char *Host)
+void  DFRobot_SIM7000::httpGet( const char *Host)
 {
-    if(!httpConnect(Host)){
+//Serial.println("test host"); 
+char SIMbuffer[100]; 
+char* frequencyValue, DeviceId ;
+   Serial.println(Host);
+	if(!httpConnect(Host)){
         //Serial.println("test_htttpconnect_host_pbr-->");
 		return;
     }
@@ -567,12 +576,25 @@ void  DFRobot_SIM7000::httpGet(const char *Host)
   
  // Serial.println("test_HTTPREAD_Avant");
 
-  // send_cmd("AT+HTTPREAD\r\n");
+   send_cmd("AT+HTTPREAD=0,55\r\n");
+//Serial.println("SIMbuffer-----1>"); // 
+  readBuffer(SIMbuffer,20,DEFAULT_TIMEOUT,DEFAULT_INTERCHAR_TIMEOUT);
+ delay(1000);
  //   String data;
  //   get_String(data);
 
-   Serial.println("test_HTTPREAD_LIRE SERVEUR------>>>>>>>");
-   send_cmd("AT+HTTPREAD=0,20\r\n");
+  
+
+ //Serial.println("test_HTTPREAD_LIRE SERVEUR------>>>>>>>");
+ // send_cmd("AT+HTTPREAD=0,63\r\n");
+     //String data;
+    //get_String(data);
+  // Serial.println("data->>>>>>>");
+ // GetConfiguration(SIMbuffer, DeviceId, frequencyValue);
+//Serial.println("SIMbuffer----->");
+// Serial.println(SIMbuffer);
+// Serial.println("\r\n");
+ //Serial.println(frequencyValue);
    //delay(7000);
 }
 
@@ -591,89 +613,34 @@ int   DFRobot_SIM7000::recv(char* buf, int maxlen, int timeout)
     return i;
 }
 
-char* DFRobot_SIM7000::GetLatitude(char* trame)
-{
-	int index=3;	
-	char delim[] = ",";
-	char * localtrame;
-	localtrame = (char *) malloc(strlen( trame));
-    strcpy( localtrame, trame );
-   
-	char *ptr = strtok(localtrame, delim);
-	while (ptr != NULL && index>0)
-	{
-		//printf("'%s'\n", ptr);
-		ptr = strtok(NULL, delim);
-		index--;
-	}
-	return ptr;
-}
 
-char* DFRobot_SIM7000::GetLongitude(char* trame)
-{
-	int index=4;	
-	char delim[] = ",";
-    
-	char * localtrame;
-	localtrame = (char *) malloc(strlen( trame));
-    strcpy( localtrame, trame );
-	
-	char *ptr = strtok(localtrame, delim);
+void DFRobot_SIM7000::GetPropertyValue(char* trame,int idx, char* value){
 
-	while (ptr != NULL && index>0)
-	{
-		//printf("'%s'\n", ptr);
-		ptr = strtok(NULL, delim);
-		index--;
-	}
-	return ptr;
-}
-
-void DfRobot_SIM7000::Split(char* trame, char* clientNameValue, char* frequencyValue){
-	
-	char delim[] = ",";		
-	char *ptr = strtok(trame, delim);
-	int index=0;
-	while (ptr != NULL)
-	{
-		//printf("'%s'\n", ptr);
-		ptr = strtok(NULL, separator);
-		if(index==0){
-			frequencyValue=ptr;
-		}
-		if(index==1){
-			clientNameValue=ptr;
-		}		
-		index++;
-	}	
-}
-
-void DfRobot_SIM7000::Split(char* trame,int idx, char* value){
-	
 	char delim[] = ":";		
 	char *ptr = strtok(trame, delim);
 	int index=0;
 	while (ptr != NULL)
 	{
 		//printf("'%s'\n", ptr);
-		ptr = strtok(NULL, separator);
+		ptr = strtok(NULL, delim);
 		if(index==idx){
 			value=ptr;
 			return;
 		}			
 		index++;
-	}	
+	}
+	return;
 }
 
-void DfRobot_SIM7000::Split(char* trame, char* clientNameValue, char* frequencyValue){
-	
+void DFRobot_SIM7000::Split(char* trame, char* clientNameValue, char* frequencyValue){
+
 	char delim[] = ",";		
 	char *ptr = strtok(trame, delim);
 	int index=0;
 	while (ptr != NULL)
 	{
 		//printf("'%s'\n", ptr);
-		ptr = strtok(NULL, separator);
+		ptr = strtok(NULL, delim);
 		if(index==0){
 			frequencyValue=ptr;
 		}
@@ -681,90 +648,78 @@ void DfRobot_SIM7000::Split(char* trame, char* clientNameValue, char* frequencyV
 			clientNameValue=ptr;
 		}		
 		index++;
-	}	
+	}
+	return;	
 }
 
 
-"{qsdqs:sdfsdf, client:sdfsdf}"
+
 void DFRobot_SIM7000::GetConfiguration(char* trame, char* clientName, char* frequencyInSecondes)
 {
 	char* clientNameValue;
 	char* frequencyValue;
 	Split(trame, clientNameValue, frequencyValue);
-	Split(clientNameValue,1,clientName);
-	Split(frequencyValue,1,frequencyInSecondes);	
+	GetPropertyValue(clientNameValue,1,clientName);
+	GetPropertyValue(frequencyValue,1,frequencyInSecondes);	
 }
-
 
 void DFRobot_SIM7000::GetGpsCoordinates(char* trame, char* latitude, char* longitude)
 {
 	int index=0;	
 	char delim[] = ",";	
-	
+	char * coordinate;
 	char *ptr = strtok(trame, delim);
 
 	while (ptr != NULL)
 	{
-		//printf("'%s'\n", ptr);
+		
 		ptr = strtok(NULL, delim);
-		if(index==3){
+		if(index==2){
 			latitude=ptr;
+			
 		}
-		if(index==4){
+		if(index==3){
 			longitude=ptr;
 		}
 		index++;
 	}
+	Serial.println(latitude);
+	Serial.println(longitude);
+	
+	
 }
 
 
-bool  DFRobot_SIM7000::getPosition(void)
+bool  DFRobot_SIM7000::getPosition(char  * latitude,  char *   longitude)
 {
     char  posBuffer[150];
     char *position;
     cleanBuffer(posBuffer,150);
     send_cmd("AT+CGNSINF\r\n");
     readBuffer(posBuffer,150);
-	//Serial.println("test_trame GPS--->>>>");
-	//Serial.println(posBuffer);
-	//Serial.println("1");
+
+	Serial.println(posBuffer);
+	Serial.println("1");
     if(NULL != strstr(posBuffer,"+CGNSINF: 1,1")){
         setCommandCounter(4);
-	//	Serial.println("2");
+	
     }else{
-      //  Serial.println("3");
+      
 		return false;
     }
     if(getCommandCounter() == 4){
+      
 		GetGpsCoordinates(posBuffer, latitude, longitude);
-        setCommandCounter(5);
-		//Serial.println("4");
+		setCommandCounter(5);
+		Serial.println("4");
         return true;
     }else{
-		//Serial.println("5");
+		Serial.println("5");
         return false;
     }
 }
 
-char* DFRobot_SIM7000::getLatitude(void)
-{
-    if(getCommandCounter() >= 5){
-        setCommandCounter(6);
-        return latitude;
-    }else{
-        return "error";
-    }
-}
 
-char* DFRobot_SIM7000::getLongitude(void)
-{
-    if(getCommandCounter() >= 5){
-        setCommandCounter(6);
-        return longitude;
-    }else{
-        return "error";
-    }
-}
 
 bool  DFRobot_SIM7000::closeNetwork(void)
 {

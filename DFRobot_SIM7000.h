@@ -49,21 +49,23 @@ public:
     void     httpDisconnect(void);
     bool     send(void *buffer,size_t len);
     bool     send(char *data);
-    bool     getPosition(void);
-    char*    getLatitude(void);
+ // Ancienne version SIM70000   
+	bool     getPosition(char  * latitude,  char *   longitude);
+   	char*    getLatitude(void);
     char*    getLongitude(void);
-	char*    GetLatitude(char* trame);
-	char*    GetLongitude(char* trame);
+// nouvelle version GPS SIM70000
 	void     GetGpsCoordinates(char* trame, char* latitude, char* longitude);
-	void     GetRemoteConfiguration();
-	void     Split(char* trame,int idx, char* value);
+	
+	
+	void     GetRemoteConfiguration(char * DeviceId);
+	void     GetPropertyValue(char* trame,int idx, char* value);
 	void     Split(char* trame, char* clientNameValue, char* frequencyValue);
 	void     GetConfiguration(char* trame, char* clientName, char* frequencyInSecondes);
-
+	
 private:
 
-    char     latitude[8];
-    char     longitude[8];
+    //char   * latitude;
+  // char    * longitude;
     char     battery[3];
     int      mode_t=0;
  };
