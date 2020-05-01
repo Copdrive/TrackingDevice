@@ -552,8 +552,7 @@ void DFRobot_SIM7000::GetRemoteConfiguration(char * DeviceId)
 	Serial.println(host);
 	httpGet(host);
 	
-	//send_cmd("AT+HTTPREAD=0,60\r\n");
-	//readBuffer(SIMbuffer,100,5,1500);
+	
 
 	
 
@@ -574,28 +573,23 @@ char* frequencyValue, DeviceId ;
         return;
     }
   
- // Serial.println("test_HTTPREAD_Avant");
+ 
 
    send_cmd("AT+HTTPREAD=0,55\r\n");
 //Serial.println("SIMbuffer-----1>"); // 
   readBuffer(SIMbuffer,20,DEFAULT_TIMEOUT,DEFAULT_INTERCHAR_TIMEOUT); // J'ai rajouté cette ligne de code pour pouvoir visualiser SIMbuffer
  delay(1000);								// Le problème que ça ne donne rien --> ce tableau est vide 
- //   String data;							// 
- //   get_String(data);
+ 
 
   
 
- //Serial.println("test_HTTPREAD_LIRE SERVEUR------>>>>>>>");
- // send_cmd("AT+HTTPREAD=0,63\r\n");
-     //String data;
-    //get_String(data);
-  // Serial.println("data->>>>>>>");
+ 
  // GetConfiguration(SIMbuffer, DeviceId, frequencyValue);  // Cette fonction est entrain de lire un SIMbuffer vide !!!!
 //Serial.println("SIMbuffer----->");
 // Serial.println(SIMbuffer);
 // Serial.println("\r\n");
  //Serial.println(frequencyValue);
-   //delay(7000);
+  //delay(7000);
 }
 
 void  DFRobot_SIM7000::httpDisconnect(void)
